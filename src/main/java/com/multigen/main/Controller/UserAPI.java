@@ -22,7 +22,7 @@ public class UserAPI {
     private final UserService userService;
 
     public UserAPI(UserService userService){
-        this.userService=userService;
+        this.userService = userService;
     }
 
 
@@ -35,11 +35,6 @@ public class UserAPI {
         return new ResponseEntity<>(userService.updateUser(userName,userDTO),HttpStatus.OK);
     }
 
-    @GetMapping("/getAllUsers")
-    public ResponseEntity<List<UserDTO>> getAllUsers(){
-
-        return new ResponseEntity<>(userService.getAllUsers(),HttpStatus.OK);
-    }
 
     @GetMapping("/getUser")
     public ResponseEntity<UserDTO> getUsers() throws AppExceptions {
@@ -62,14 +57,5 @@ public class UserAPI {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-
-    @PostMapping("/login")
-    public ResponseEntity<UserDTO>loginUser(@RequestBody @Valid LoginDTO loginDTO) throws AppExceptions{
-
-        return new ResponseEntity<>(userService.LogonUser(loginDTO),HttpStatus.FOUND);
-
-    }
-
 
 }

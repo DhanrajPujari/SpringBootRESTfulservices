@@ -11,7 +11,7 @@ public interface UserService {
     public UserDTO registerNewUser(UserDTO userDTO) throws AppExceptions;
     public List<UserDTO> getAllUsers();
     public UserDTO getUser(String userName)throws AppExceptions;;
-    public UserDTO LogonUser(LoginDTO loginDTO) throws AppExceptions;
+    public UserDTO LoginUser(LoginDTO loginDTO) throws AppExceptions;
 
     public UserDTO updateUser(String userName,UserDTO userDTO)throws AppExceptions;
 

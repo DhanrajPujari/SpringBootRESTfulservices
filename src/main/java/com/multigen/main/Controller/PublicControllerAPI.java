@@ -1,5 +1,6 @@
 package com.multigen.main.Controller;
 
+import com.multigen.main.DTO.LoginDTO;
 import com.multigen.main.DTO.UserDTO;
 import com.multigen.main.Exception.AppExceptions;
 import com.multigen.main.Services.UserService;
@@ -25,5 +26,11 @@ public class PublicControllerAPI {
 
         userDTO = userService.registerNewUser(userDTO);
         return new ResponseEntity<>(userDTO, HttpStatus.CREATED);
+    }
+    @PostMapping("/login")
+    public ResponseEntity<UserDTO>loginUser(@RequestBody @Valid LoginDTO loginDTO) throws AppExceptions{
+
+        return new ResponseEntity<>(userService.LoginUser(loginDTO),HttpStatus.FOUND);
+
     }
 }

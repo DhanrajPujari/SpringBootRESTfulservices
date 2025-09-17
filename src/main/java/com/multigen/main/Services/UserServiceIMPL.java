@@ -53,7 +53,7 @@ public class UserServiceIMPL implements UserService{
 
 
     @Override
-    public UserDTO LogonUser(LoginDTO loginDTO) throws AppExceptions {
+    public UserDTO LoginUser(LoginDTO loginDTO) throws AppExceptions {
 
         User user = userRepository.findByEmail(loginDTO.getEmail()).orElseThrow(()->new AppExceptions("USER_NOT_FOUND"));
         if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword()))throw new AppExceptions("INVALID_CREDENTIALS");
