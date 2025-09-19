@@ -10,10 +10,10 @@ import java.util.Optional;
 
 public interface JournalEntryService {
 
-    public UserDTO createNewJournalEntry(JournalEntryDTO journalEntryDTO, String userName) throws AppExceptions;
+    public JournalEntryDTO createNewJournalEntry(JournalEntryDTO journalEntryDTO, String userName) throws AppExceptions;
 
 
-    public List<JournalEntryDTO> getAllGeneralEntriesOfUser(Long id,String userName)throws AppExceptions;
+    public List<JournalEntryDTO> getAllGeneralEntriesOfUser(String userName)throws AppExceptions;
 
 
     public Optional<JournalEntryDTO> getEntryById(String userName,Long id)throws AppExceptions;

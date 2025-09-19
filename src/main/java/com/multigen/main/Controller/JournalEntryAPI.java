@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
@@ -24,7 +25,7 @@ public class JournalEntryAPI {
     private JournalEntryService journalEntryService;
 
     @PostMapping("/create")
-    public ResponseEntity<UserDTO> createJournalEntry(@Valid @RequestBody JournalEntryDTO journalEntryDTO) throws AppExceptions {
+    public ResponseEntity<JournalEntryDTO> createJournalEntry(@Valid @RequestBody JournalEntryDTO journalEntryDTO) throws AppExceptions {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -34,13 +35,13 @@ public class JournalEntryAPI {
 
     }
 
-    @GetMapping("/get/{id}")
-    public ResponseEntity<List<JournalEntryDTO>> getAllGeneralEntriesOfUser(@PathVariable Long id) throws AppExceptions {
+    @GetMapping("/get")
+    public ResponseEntity<List<JournalEntryDTO>> getAllGeneralEntriesOfUser() throws AppExceptions {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
 
-        return new ResponseEntity<>(journalEntryService.getAllGeneralEntriesOfUser(id,userName),HttpStatus.OK);
+        return new ResponseEntity<>(journalEntryService.getAllGeneralEntriesOfUser(userName),HttpStatus.OK);
 
     }
 
@@ -59,6 +60,7 @@ public class JournalEntryAPI {
 
     //remaining
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update/{id}")
     public ResponseEntity<JournalEntryDTO> updateEntry(@PathVariable Long id,@RequestBody JournalEntryDTO journalEntryDTO) throws AppExceptions {
 

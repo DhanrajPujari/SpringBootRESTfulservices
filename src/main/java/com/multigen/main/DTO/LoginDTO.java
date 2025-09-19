@@ -11,6 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginDTO {
+
+    @NotBlank(message = "{user.name.absent}")
+    private String userName;
+
     @NotBlank(message = "{user.email.absent}")
     @Email(message = "{user.email.invalid}")
     private String email;

@@ -28,7 +28,7 @@ public class JournalEntryServiceIMPL implements JournalEntryService{
     private UserRepository userRepository;
 
     @Override
-    public UserDTO createNewJournalEntry(JournalEntryDTO journalEntryDTO,String userName) throws AppExceptions {
+    public JournalEntryDTO createNewJournalEntry(JournalEntryDTO journalEntryDTO,String userName) throws AppExceptions {
 
         User user = userRepository.findByUserName(userName);
 
@@ -49,26 +49,36 @@ public class JournalEntryServiceIMPL implements JournalEntryService{
         entry.setDateTime(journalEntryDTO.getDateTime());
         entry.setUser(user);
 
-//        return journalEntryRepository.save(entry);
 
-        return journalEntryRepository.save(entry).getUser().ToDTO();
+
+        return journalEntryRepository.save(entry).toDTO();
+
+
 
     }
 
 
     @Override
-    public List<JournalEntryDTO> getAllGeneralEntriesOfUser(Long id,String userName)  throws AppExceptions{
+    public List<JournalEntryDTO> getAllGeneralEntriesOfUser(String userName)  throws AppExceptions{
 
         User user = userRepository.findByUserName(userName);
 
-        if (user.getId().equals(id)){
+         List<JournalEntry> journalEntries = user.getJournalEntries();
 
-        return journalEntryRepository.findByUserId(id).stream().map(JournalEntry::toDTO).toList();
-
+         if (!journalEntries.isEmpty()){
+             return journalEntries.stream().map(JournalEntry::toDTO).toList();
         }else {
+             throw new AppExceptions("ENTRY_NOT_FOUND");
+         }
 
-            throw new AppExceptions("USER_ID_AND_USERNAME_WRONG");
-        }
+//        if (user.getId().equals(id)){
+//
+//        return journalEntryRepository.findByUserId(id).stream().map(JournalEntry::toDTO).toList();
+//
+//        }else {
+//
+//            throw new AppExceptions("USER_ID_AND_USERNAME_WRONG");
+//        }
 
     }
 
@@ -100,9 +110,11 @@ public class JournalEntryServiceIMPL implements JournalEntryService{
 
         User user = userRepository.findByUserName(userName);
 
-        com.multigen.main.Entity.JournalEntry journalEntry =user.getJournalEntries().stream().filter(e -> Objects.equals(e.getId(), id))
+        com.multigen.main.Entity.JournalEntry journalEntry = user.getJournalEntries().stream().filter(e -> Objects.equals(e.getId(), id))
                 .findFirst()
                 .orElseThrow(() -> new AppExceptions("ENTRY_NOT_FOUND"));
+
+        user.getJournalEntries().remove(journalEntry);
 
         userRepository.save(user);
 
@@ -119,9 +131,34 @@ public class JournalEntryServiceIMPL implements JournalEntryService{
 
         User user = userRepository.findByUserName(userName);
 
-        if (user != null)
+        boolean isAdmin = authentication.getAuthorities().stream().anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN"));
+
+        if (isAdmin){
+
+            JournalEntry journalEntry = journalEntryRepository.findById(id).orElseThrow(() -> new AppExceptions("ENTRY_NOT_FOUND"));
+
+            LocalDateTime now = LocalDateTime.now().withNano(0);
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss a");
+            String formatted = now.format(formatter);
+
+            journalEntry.setContent(journalEntryDTO.getContent());
+            journalEntry.setDateTime(formatted);
+            journalEntry.setTitle(journalEntryDTO.getTitle());
+            journalEntry.setId(id);
+
+            return journalEntryRepository.save(journalEntry).toDTO();
+
+        }
+
+
+
+        if (user != null )
 
         {
+
+
+
             JournalEntry journalEntry = user.getJournalEntries().stream().filter(e -> Objects.equals(e.getId(), id))
                     .findFirst()
                     .orElseThrow(() -> new AppExceptions("ENTRY_NOT_FOUND"));

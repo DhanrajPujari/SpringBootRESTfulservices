@@ -10,6 +10,7 @@ import java.util.List;
 public interface UserService {
     public UserDTO registerNewUser(UserDTO userDTO) throws AppExceptions;
     public List<UserDTO> getAllUsers();
+
     public UserDTO getUser(String userName)throws AppExceptions;;
     public UserDTO LoginUser(LoginDTO loginDTO) throws AppExceptions;
 

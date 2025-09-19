@@ -40,6 +40,7 @@ public class GlobelExceptionHandler {
 
         ErrorInfo errorInfo = new ErrorInfo(message, HttpStatus.INTERNAL_SERVER_ERROR.value(), LocalDateTime.now());
         return new ResponseEntity<>(errorInfo,HttpStatus.INTERNAL_SERVER_ERROR);
+
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class, ConstraintViolationException.class})
